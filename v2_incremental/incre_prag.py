@@ -1,5 +1,6 @@
 from prag_utils import *
 from line1 import *
+from animals import make_animalgame
 import random
 
 def make_L0(M, H_prior):
@@ -117,6 +118,12 @@ def test1():
 if __name__ == '__main__':
     H, U, M = make_linegame()
     H, U, M = make_rand_game()
+    H, U, M = make_animalgame()
+
+    print (H)
+    print (U)
+    print (M.shape)
+
     H_prior = [1/len(H) for x in H]
     U_prior = [1/len(U) for u in U]
     
@@ -132,14 +139,14 @@ if __name__ == '__main__':
             l1_zip = [(i,ll1) for i,ll1 in enumerate(l1)]
             l1_ord = sorted(l1_zip, key = lambda x: -x[1])
             l1_ord_filt = [x[0] for x in l1_ord if x[1] != float('-inf')]
-            if l1_ord_filt[0] == h:
+            if l1_ord_filt[0] == H.index(h):
                 return s1_us, l1_ord_filt
         return s1_us, l1_ord_filt
 
     comm_complexity = []
     for h in H:
         utts, ords = go_until_good(h)
-        print (f'{H.index(h)} --S1-> {utts} --L1-> {ords}')
+        print (f'{h} --S1-> {[U[u] for u in utts]} --L1-> {[H[h] for h in ords]}')
         comm_complexity.append(len(utts))
     print (sum(comm_complexity) / len(H))
 
