@@ -1,6 +1,8 @@
 from prag_utils import *
 from line1 import *
 from animals import make_animalgame
+
+from prag_ordering import *
 import random
 
 def make_L0(M, H_prior):
@@ -143,10 +145,24 @@ if __name__ == '__main__':
                 return s1_us, l1_ord_filt
         return s1_us, l1_ord_filt
 
+    s1_corpus = []
     comm_complexity = []
     for h in H:
         utts, ords = go_until_good(h)
+        s1_corpus.append(utts)
         print (f'{h} --S1-> {[U[u] for u in utts]} --L1-> {[H[h] for h in ords]}')
         comm_complexity.append(len(utts))
     print (sum(comm_complexity) / len(H))
+
+    ords = find_ordering(s1_corpus, L1, H)
+    print ("pragmatic orderings . . .")
+    print ([H[o] for o in ords])
+
+    print ("=== comparing L1 with Lo ===")
+    Lo = make_Lo(ords, H, L0)
+    for h in H:
+        utts, ords = go_until_good(h)
+        print (f'{h} --S1-> {[U[u] for u in utts]} --L1-> {[H[h] for h in ords]}')
+        print (f'{h} --S1-> {[U[u] for u in utts]} --Lo-> {[H[h] for h in Lo(utts)]}')
+        
 
